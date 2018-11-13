@@ -27,13 +27,13 @@ public class CommonUtils {
 
     public static Context getApplication() {
         if (application == null)
-            throw new NullPointerException("请先调用 CommonUtils.init(Application application) 方法进行初始化");
+            throw new NullPointerException("请先调用 com.renj.common.CommonUtils.init(Application application) 方法进行初始化");
         return application;
     }
 
     public static boolean isDebug() {
         if (application == null)
-            throw new NullPointerException("请先调用 CommonUtils.init(Application application) 方法进行初始化");
+            throw new NullPointerException("请先调用 com.renj.common.CommonUtils.init(Application application) 方法进行初始化");
 
         boolean isDebug = application.getApplicationInfo() != null &&
                 (application.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;

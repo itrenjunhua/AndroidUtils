@@ -47,12 +47,34 @@ public class NotificationUtils {
         return instance;
     }
 
+    /**
+     * 设置 CHANNEL_ID 和 CHANNEL_NAME<br/><br/>
+     * Android O (Build.VERSION.SDK_INT >= 26)引入了 通知渠道（Notification Channels），以提供统一的系统来帮助用户管理通知，
+     * 如果是针对 android O 为目标平台时，必须实现一个或者多个通知渠道，以向用户显示通知。
+     * 若并不以 Android O 为目标平台，当应用运行在 android O 设备上时，其行为将与运行在 Android 7.0 上时相同。
+     *
+     * @param channelId   通道标识
+     * @param channelName 通道名字
+     * @return
+     */
     public NotificationUtils setChannelValue(String channelId, String channelName) {
         NotificationUtils.CHANNEL_ID = channelId;
         NotificationUtils.CHANNEL_NAME = channelName;
         return instance;
     }
 
+    /**
+     * 根据参数显示一个通知
+     *
+     * @param context        上下文
+     * @param requestCode    请求码
+     * @param iconId         显示图标
+     * @param notificationId 通知id
+     * @param ticker         通知时在状态栏显示的通知内容
+     * @param title          标题
+     * @param content        内容
+     * @param intent         延迟意图
+     */
     public void showNotification(@NonNull Context context, int requestCode, @DrawableRes int iconId,
                                  int notificationId, @NonNull String ticker, @NonNull String title,
                                  @NonNull String content, Intent intent) {
@@ -72,6 +94,18 @@ public class NotificationUtils {
         notificationManager.notify(notificationId, notification);
     }
 
+    /**
+     * 根据参数返回一个通知 {@link Notification} 对象
+     *
+     * @param context     上下文
+     * @param requestCode 请求码
+     * @param iconId      显示图标
+     * @param ticker      通知时在状态栏显示的通知内容
+     * @param title       标题
+     * @param content     内容
+     * @param intent      延迟意图
+     * @return {@link Notification} 对象
+     */
     public Notification getNotification(@NonNull Context context, int requestCode, @DrawableRes int iconId,
                                         @NonNull String ticker, @NonNull String title, @NonNull String content, Intent intent) {
         PendingIntent pendingIntent = null;

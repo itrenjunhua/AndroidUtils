@@ -10,6 +10,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import com.renj.common.R;
+import com.renj.common.utils.ResUtils;
 
 /**
  * ======================================================================
@@ -29,9 +30,13 @@ public class CallPhoneDialog extends Dialog implements View.OnClickListener {
     private View mDialogView;
     private TextView tvPhone, tvCancel, tvOk;
     private CallPhoneListener callPhoneListener;
-    private String phoneNumber, cancelText, okText;
-    private int phoneColor, cancelColor, okColor;
-    private int btSize, phoneSize;
+    private String phoneNumber = "",
+            cancelText = ResUtils.getString(R.string.cancel),
+            okText = ResUtils.getString(R.string.call);
+    private int phoneColor = ResUtils.getColor(R.color.main_text),
+            cancelColor = ResUtils.getColor(R.color.dialog_bt_text),
+            okColor = ResUtils.getColor(R.color.dialog_bt_text);
+    private int btSize = 16, phoneSize = 18;
 
     /**
      * 创建对话框

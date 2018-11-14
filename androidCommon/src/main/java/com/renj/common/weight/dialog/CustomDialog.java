@@ -10,6 +10,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import com.renj.common.R;
+import com.renj.common.utils.ResUtils;
 
 /**
  * ======================================================================
@@ -29,9 +30,14 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
     private View mDialogView;
     private TextView tvDialogContent, tvCancel, tvOk, tvDialogTitle;
     private CustomDialogListener customDialogListener;
-    private String confirmText, cancelText, dialogContentText, title;
-    private int confirmColor, cancelColor, dialogContentColor, titleColor;
-    private int btTextSize, dialogContentSize, titleSize;
+    private String confirmText = ResUtils.getString(R.string.confirm),
+            cancelText = ResUtils.getString(R.string.cancel),
+            dialogContentText = "", title = "";
+    private int confirmColor = ResUtils.getColor(R.color.dialog_bt_text),
+            cancelColor = ResUtils.getColor(R.color.dialog_bt_text),
+            dialogContentColor = ResUtils.getColor(R.color.main_text),
+            titleColor = ResUtils.getColor(R.color.main_text);
+    private int btTextSize = 16, dialogContentSize = 15, titleSize = 18;
     private boolean showTitle = false;
 
     /**

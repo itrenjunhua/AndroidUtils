@@ -19,8 +19,7 @@
             android:paddingRight="26dp"
             android:text=""
             android:textColor="@color/main_text"
-            android:textSize="18sp"/>
-
+            android:textSize="@dimen/dialog_phone"/>
 
     <View
             android:layout_width="match_parent"

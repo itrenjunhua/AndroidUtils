@@ -2,6 +2,7 @@ package com.renj.common.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -23,11 +24,38 @@ import java.io.IOException;
  * ======================================================================
  */
 public class BitmapUtils {
+
+    /**
+     * 根据图片路径和目标宽高计算采样率
+     *
+     * @param bitmapPath   原始图片路径
+     * @param targetWidth  目标宽
+     * @param targetHeight 目标高
+     * @return 采样率
+     */
+    public static int calculateSampleSize(@NonNull String bitmapPath, int targetWidth, int targetHeight) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(bitmapPath, options);
+        int outWidth = options.outWidth;
+        int outHeight = options.outHeight;
+
+        if (targetWidth > outWidth && targetHeight > outHeight) {
+            return 1;
+        } else {
+            int sampleSize = 2;
+            while ((outWidth / sampleSize > targetWidth) && (outHeight / sampleSize > targetHeight)) {
+                sampleSize *= 2;
+            }
+            return sampleSize;
+        }
+    }
+
     /**
      * 压缩图片文件到指定大小
      *
      * @param filePath    图片文件路径
-     * @param maxFileSize 压缩后的最大值
+     * @param maxFileSize 压缩后的最大值  单位：KB
      */
     public static void compressBmpToFile(String filePath, int maxFileSize) {
         Bitmap bitmap = BitmapFactory.decodeFile(filePath);

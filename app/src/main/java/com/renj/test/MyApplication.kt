@@ -1,7 +1,7 @@
-package com.renj.test;
+package com.renj.test
 
-import android.app.Application;
-import com.renj.common.CommonUtils;
+import android.app.Application
+import com.renj.common.CommonUtils
 
 /**
  * ======================================================================
@@ -17,10 +17,9 @@ import com.renj.common.CommonUtils;
  * <p>
  * ======================================================================
  */
-public class MyApplication extends Application {
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        CommonUtils.init(this);
+class MyApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        CommonUtils.init(this)
     }
 }

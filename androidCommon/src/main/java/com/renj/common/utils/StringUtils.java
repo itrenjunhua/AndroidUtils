@@ -76,7 +76,7 @@ public class StringUtils {
      * @param value 需要处理的字符串
      * @return 返回 "" 或者 原字符串
      */
-    public static String handString(String value) {
+    public static String handlerString(String value) {
         if (isEmpty(value)) return "";
         return value;
     }

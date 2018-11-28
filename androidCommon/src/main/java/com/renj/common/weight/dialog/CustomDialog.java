@@ -5,12 +5,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Dimension;
 import android.support.annotation.NonNull;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import com.renj.common.R;
 import com.renj.common.utils.ResUtils;
+import com.renj.common.utils.UIUtils;
 
 /**
  * ======================================================================
@@ -30,15 +34,22 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
     private View mDialogView;
     private TextView tvDialogContent, tvCancel, tvOk, tvDialogTitle;
     private CustomDialogListener customDialogListener;
-    private String confirmText = ResUtils.getString(R.string.confirm),
-            cancelText = ResUtils.getString(R.string.cancel),
+    private String confirmText = ResUtils.getString(R.string.common_confirm),
+            cancelText = ResUtils.getString(R.string.common_cancel),
             dialogContentText = "", title = "";
-    private int confirmColor = ResUtils.getColor(R.color.dialog_bt_text),
-            cancelColor = ResUtils.getColor(R.color.dialog_bt_text),
-            dialogContentColor = ResUtils.getColor(R.color.main_text),
-            titleColor = ResUtils.getColor(R.color.main_text);
+    private int confirmColor = ResUtils.getColor(R.color.common_dialog_bt_text),
+            cancelColor = ResUtils.getColor(R.color.common_dialog_bt_text),
+            dialogContentColor = ResUtils.getColor(R.color.common_main_text),
+            titleColor = ResUtils.getColor(R.color.common_main_text);
     private int btTextSize = 16, dialogContentSize = 15, titleSize = 18;
     private boolean showTitle = false;
+
+    // 点击按钮时是否需要关闭dialog ，默认关闭
+    private boolean isDismiss = true;
+
+    // 默认宽和高
+    private int width = UIUtils.dip2px(300);
+    private int height = WindowManager.LayoutParams.WRAP_CONTENT;
 
     /**
      * 创建对话框
@@ -51,16 +62,16 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
     }
 
     public CustomDialog(@NonNull Context context) {
-        super(context, R.style.alert_dialog);
+        super(context, R.style.common_alert_dialog);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_custom);
+        setContentView(R.layout.common_dialog_custom);
 
         mDialogView = getWindow().getDecorView().findViewById(android.R.id.content);
-        mModalInAnim = (AnimationSet) AnimationUtils.loadAnimation(getContext(), R.anim.dialog_modal_in);
+        mModalInAnim = (AnimationSet) AnimationUtils.loadAnimation(getContext(), R.anim.common_dialog_modal_in);
 
         tvDialogTitle = (TextView) findViewById(R.id.tv_title_dialog);
         tvDialogContent = (TextView) findViewById(R.id.tv_dialog_content);
@@ -82,6 +93,47 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
 
         tvCancel.setOnClickListener(this);
         tvOk.setOnClickListener(this);
+    }
+
+    /**
+     * 设置 {@link CustomDialog} 的宽和高，单位 px <br/>
+     * 宽：默认 300dp；<br/>
+     * 高：默认 {@link WindowManager.LayoutParams#WRAP_CONTENT}
+     *
+     * @param width  宽，默认 300dp
+     * @param height 高，默认 {@link WindowManager.LayoutParams#WRAP_CONTENT}
+     * @return
+     */
+    public CustomDialog setSize(int width, int height) {
+        this.width = width;
+        this.height = height;
+        return this;
+    }
+
+    /**
+     * 设置 {@link CustomDialog} 的宽，单位 px <br/>
+     * 宽：默认 300dp；<br/>
+     * 高：默认 {@link WindowManager.LayoutParams#WRAP_CONTENT}
+     *
+     * @param width 宽，默认 300dp
+     * @return
+     */
+    public CustomDialog setWidth(int width) {
+        this.width = width;
+        return this;
+    }
+
+    /**
+     * 设置 {@link CustomDialog} 的高，单位 px <br/>
+     * 宽：默认 300dp；<br/>
+     * 高：默认 {@link WindowManager.LayoutParams#WRAP_CONTENT}
+     *
+     * @param height 高，默认 {@link WindowManager.LayoutParams#WRAP_CONTENT}
+     * @return
+     */
+    public CustomDialog setHeight(int height) {
+        this.height = height;
+        return this;
     }
 
     /**
@@ -261,9 +313,31 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
+    /**
+     * 设置监听并指定点击按钮时是否需要关闭dialog ，默认关闭
+     *
+     * @param isDismiss            点击按钮时是否需要关闭dialog ，默认关闭
+     * @param customDialogListener
+     * @return
+     */
+    public CustomDialog setCustomDialogListener(boolean isDismiss, CustomDialogListener customDialogListener) {
+        this.isDismiss = isDismiss;
+        this.customDialogListener = customDialogListener;
+        return this;
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
+
+        // 指定宽高
+        Window window = this.getWindow();
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.gravity = Gravity.CENTER;
+        lp.width = width;
+        lp.height = height;
+        this.getWindow().setAttributes(lp);
+
         mDialogView.startAnimation(mModalInAnim);
     }
 
@@ -271,12 +345,12 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
         int vId = v.getId();
         if (R.id.tv_dialog_cancel == vId) {
-            this.dismiss();
+            if (isDismiss) this.dismiss();
             if (customDialogListener != null) {
                 customDialogListener.onCancel(this);
             }
         } else if (R.id.tv_dialog_ok == vId) {
-            this.dismiss();
+            if (isDismiss) this.dismiss();
             if (customDialogListener != null) {
                 customDialogListener.onConfirm(this);
             }

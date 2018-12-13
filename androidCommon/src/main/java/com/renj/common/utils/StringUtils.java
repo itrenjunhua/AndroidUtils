@@ -60,11 +60,13 @@ public class StringUtils {
     @org.jetbrains.annotations.Contract(value = "null -> false")
     public static boolean isEquals(String... args) {
         if (args == null) return false;
-        String last = null;
-        for (int i = 0; i < args.length; i++) {
+        if(args.length <= 1) return false;
+        String last = args[0];
+        if (isEmpty(last)) return false;
+        for (int i = 1; i < args.length; i++) {
             String str = args[i];
             if (isEmpty(str)) return false;
-            if (null != last && !str.equalsIgnoreCase(last)) return false;
+            if (!str.equals(last)) return false;
             last = str;
         }
         return true;

@@ -67,46 +67,6 @@ public class DateUtils {
     }
 
     /**
-     * 根据传入的时间字符串和偏移天数获取到偏移之后的日期和星期
-     *
-     * @param time           传入的时间字符串
-     * @param paramsTemplate 传入的时间字符串格式模板 如："yyyy-MM-dd HH:mm:ss"
-     * @param resultTemplate 返回的日期时间格式模板 如："yyyy-MM-dd HH:mm:ss"
-     * @param offset         偏移量 单位：天
-     * @return strings[0]：日期时间  strings[1]：星期
-     */
-    public static String[] getDateAndWeek(@NonNull String time, @NonNull String paramsTemplate, @NonNull String resultTemplate, int offset) {
-        return getDateAndWeek(formatToLong(time, paramsTemplate), resultTemplate, offset);
-    }
-
-    /**
-     * 根据传入的时间戳和偏移天数获取到偏移之后的日期和星期
-     *
-     * @param millis   传入的时间戳
-     * @param template 返回的日期时间格式模板 如："yyyy-MM-dd HH:mm:ss"
-     * @param offset   偏移量 单位：天
-     * @return strings[0]：日期时间  strings[1]：星期
-     */
-    public static String[] getDateAndWeek(long millis, @NonNull String template, int offset) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(millis);
-        calendar.add(Calendar.DAY_OF_MONTH, offset);
-
-        String[] result = new String[2];
-
-        long timeInMillis = calendar.getTimeInMillis();
-        result[0] = formatDateAndTime(timeInMillis, template);
-
-        int week_index = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-        if (week_index < 0) {
-            week_index = 0;
-        }
-        result[1] = weeks[week_index];
-
-        return result;
-    }
-
-    /**
      * 时间字符串转为long时间戳
      *
      * @param time     字符串时间,注意:格式要与template定义的一样
@@ -280,29 +240,136 @@ public class DateUtils {
     /**
      * 获取时间差值
      *
-     * @param startTime       开始时间
-     * @param startTemplate   开始类型
-     * @param currentTime     当前时间
-     * @param currentTemplate 当前时间类型
-     * @return 返回时间差值 int[0] 时 int[1] 分 int[2] 秒
+     * @param startTime     开始时间
+     * @param startTemplate 开始类型
+     * @param endTime       当前时间
+     * @param endTemplate   当前时间类型
+     * @return 返回时间差值 int[0] 天 int[1] 时 int[2] 分 int[3] 秒
      */
     @NonNull
     @CheckResult(suggest = "返回结果没有使用过")
     @org.jetbrains.annotations.Contract(pure = true)
     public static int[] getTimeDiff(@NonNull String startTime, @NonNull String startTemplate,
-                                    @NonNull String currentTime, @NonNull String currentTemplate) {
-        int[] result = new int[3];
-        long resultLong = formatToLong(currentTime, currentTemplate) - formatToLong(startTime, startTemplate);
+                                    @NonNull String endTime, @NonNull String endTemplate) {
+        return getTimeDiff(formatToLong(startTime, startTemplate), formatToLong(endTime, endTemplate));
+    }
+
+    /**
+     * 获取时间差值
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @return 返回时间差值 int[0] 天 int[1] 时 int[2] 分 int[3] 秒
+     */
+    @NonNull
+    @CheckResult(suggest = "返回结果没有使用过")
+    @org.jetbrains.annotations.Contract(pure = true)
+    public static int[] getTimeDiff(long startTime, long endTime) {
+        int[] result = new int[4];
+        long resultLong = endTime - startTime;
         if (resultLong <= 0) {
             result[0] = 0;
             result[1] = 0;
             result[2] = 0;
+            result[3] = 0;
         } else {
-            result[0] = (int) (resultLong / HH);
-            result[1] = (int) ((resultLong - result[0] * HH) / MI);
-            result[2] = (int) ((resultLong - result[0] * HH - result[1] * MI) / SS);
+            result[0] = (int) (resultLong / DD);
+            result[1] = (int) ((resultLong - result[0] * DD) / HH);
+            result[2] = (int) ((resultLong - result[0] * DD - result[1] * HH) / MI);
+            result[3] = (int) ((resultLong - result[0] * DD - result[1] * HH - result[2] * MI) / SS);
         }
         return result;
+    }
+
+    /**
+     * 获取指定时间的年、月、日、时、分、秒 数组形式返回
+     *
+     * @param millis 时间毫秒值
+     * @return 返回 int[] int[0]：年、int[1]：月，取值为 1-12、int[2]：日、int[3]：时、int[4]：分、int[5]：秒
+     */
+    public static int[] getDateArray(long millis) {
+        int[] result = new int[6];
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(millis);
+        result[0] = calendar.get(Calendar.YEAR);
+        result[1] = calendar.get(Calendar.MONTH) + 1;
+        result[2] = calendar.get(Calendar.DAY_OF_MONTH);
+        result[3] = calendar.get(Calendar.HOUR_OF_DAY);
+        result[4] = calendar.get(Calendar.MINUTE);
+        result[5] = calendar.get(Calendar.SECOND);
+
+        return result;
+    }
+
+    /**
+     * 获取指定时间的毫秒值
+     *
+     * @param year   年
+     * @param month  月 取值为 1-12
+     * @param day    日
+     * @param hour   时
+     * @param minute 分
+     * @param second 秒
+     * @return 指定时间的毫秒值
+     */
+    public static long getDateMillis(int year, int month, int day, int hour, int minute, int second) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, day, hour, minute, second);
+        return calendar.getTimeInMillis();
+    }
+
+    /**
+     * 根据传入的时间字符串和偏移天数获取到偏移之后的日期和星期
+     *
+     * @param time           传入的时间字符串
+     * @param paramsTemplate 传入的时间字符串格式模板 如："yyyy-MM-dd HH:mm:ss"
+     * @param resultTemplate 返回的日期时间格式模板 如："yyyy-MM-dd HH:mm:ss"
+     * @param offset         偏移量 单位：天
+     * @return strings[0]：日期时间  strings[1]：星期
+     */
+    public static String[] dateChange(@NonNull String time, @NonNull String paramsTemplate, @NonNull String resultTemplate, int offset) {
+        return dateChange(formatToLong(time, paramsTemplate), resultTemplate, offset);
+    }
+
+    /**
+     * 根据传入的时间戳和偏移天数获取到偏移之后的日期和星期
+     *
+     * @param millis   传入的时间戳
+     * @param template 返回的日期时间格式模板 如："yyyy-MM-dd HH:mm:ss"
+     * @param offset   偏移量 单位：天
+     * @return strings[0]：日期时间  strings[1]：星期
+     */
+    public static String[] dateChange(long millis, @NonNull String template, int offset) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(millis);
+        calendar.add(Calendar.DAY_OF_MONTH, offset);
+
+        String[] result = new String[2];
+
+        long timeInMillis = calendar.getTimeInMillis();
+        result[0] = formatDateAndTime(timeInMillis, template);
+
+        int week_index = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        if (week_index < 0) {
+            week_index = 0;
+        }
+        result[1] = weeks[week_index];
+
+        return result;
+    }
+
+    /**
+     * 根据传入的时间戳和偏移天数获取到偏移之后的时间戳
+     *
+     * @param millis 传入的时间戳
+     * @param offset 偏移量 单位：天
+     * @return long
+     */
+    public static long dateChange(long millis, int offset) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(millis);
+        calendar.add(Calendar.DAY_OF_MONTH, offset);
+        return calendar.getTimeInMillis();
     }
 
     /**
@@ -317,8 +384,25 @@ public class DateUtils {
      * @param s     偏移秒
      * @return 偏移后的时间日期 yyyy-MM-dd HH:mm:ss
      */
-    public static String timeChange(long mills, int year, int month, int day, int h, int m, int s) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static String dateChange(long mills, int year, int month, int day, int h, int m, int s) {
+        return dateChange(mills, year, month, day, h, m, s, "yyyy-MM-dd HH:mm:ss");
+    }
+
+    /**
+     * 在给出的时间戳上对 年、月、日、时、分、秒进行偏移，返回偏移后的时间日期
+     *
+     * @param mills          时间戳
+     * @param year           偏移年
+     * @param month          偏移月
+     * @param day            偏移日
+     * @param h              偏移时
+     * @param m              偏移分
+     * @param s              偏移秒
+     * @param resultTemplate 偏移后的时间日期格式
+     * @return 偏移后的时间日期
+     */
+    public static String dateChange(long mills, int year, int month, int day, int h, int m, int s, @NonNull String resultTemplate) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(resultTemplate);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(mills);
@@ -341,7 +425,7 @@ public class DateUtils {
      * @param s     偏移秒
      * @return 偏移后的时间日期时间 时间戳
      */
-    public static long timeChange2(long mills, int year, int month, int day, int h, int m, int s) {
+    public static long dateChange2(long mills, int year, int month, int day, int h, int m, int s) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(mills);
 

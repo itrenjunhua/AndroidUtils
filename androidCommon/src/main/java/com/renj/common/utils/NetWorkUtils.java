@@ -3,8 +3,6 @@ package com.renj.common.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 
 /**
@@ -34,27 +32,5 @@ public class NetWorkUtils {
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
-    }
-
-    /**
-     * 获取当前设备连接的WiFi
-     *
-     * @param context
-     * @return 当前设备连接的WiFi名称
-     */
-    public static String getSSid(@NonNull Context context) {
-        WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        if (wm != null) {
-            WifiInfo wi = wm.getConnectionInfo();
-            if (wi != null) {
-                String ssid = wi.getSSID();
-                if (ssid.length() > 2 && ssid.startsWith("\"") && ssid.endsWith("\"")) {
-                    return ssid.substring(1, ssid.length() - 1);
-                } else {
-                    return ssid;
-                }
-            }
-        }
-        return "";
     }
 }

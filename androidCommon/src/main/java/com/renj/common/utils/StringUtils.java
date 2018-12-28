@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 
+import java.util.List;
+
 /**
  * ======================================================================
  * <p>
@@ -102,5 +104,35 @@ public class StringUtils {
         CharacterStyle span = new ForegroundColorSpan(color);
         spannable.setSpan(span, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannable;
+    }
+
+
+    /**
+     * 将 {@link List<String>} 按指定分隔符转变为 {@link String}
+     *
+     * @param stringList {@link List<String>}
+     * @param split      分隔符
+     * @return {@link String}
+     */
+    public static String concat(List<String> stringList, String split) {
+        if (ListUtils.isEmpty(stringList)) return "";
+        StringBuffer sb = new StringBuffer();
+        for (String string : stringList) {
+            sb.append(string);
+            sb.append(split);
+        }
+        return sb.substring(0, sb.length() - 1);
+    }
+
+    /**
+     * 将 {@link String} 变为 {@link List<String>}
+     *
+     * @param skipNumber {@link String}
+     * @param split      分隔符
+     * @return {@link List<String>}
+     */
+    public static List<String> splitToList(String skipNumber, String split) {
+        String[] skipStrings = skipNumber.split(split);
+        return ListUtils.fromArray(skipStrings);
     }
 }

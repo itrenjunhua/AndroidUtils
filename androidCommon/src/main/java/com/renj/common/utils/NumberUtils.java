@@ -1,10 +1,12 @@
 package com.renj.common.utils;
 
+import java.text.DecimalFormat;
+
 /**
  * ======================================================================
  * <p>
  * 作者：Renj
- * 邮箱：renjunhua@anlovek.com
+ * 邮箱：itrenjunhua@163.com
  * <p>
  * 创建时间：2018-05-22   17:27
  * <p>
@@ -38,5 +40,21 @@ public class NumberUtils {
             e.printStackTrace();
             return 0.00;
         }
+    }
+
+    /**
+     * 将数字转换为指定格式
+     *
+     * @param number 数字
+     * @param format 格式 如 {@code #0.00} 如果为空，使用默认 {@code #0.00}
+     * @return
+     */
+    public static String numberFormat(double number, String format) {
+        DecimalFormat decimalFormat;
+        if (StringUtils.isEmpty(format))
+            decimalFormat = new DecimalFormat("#0.00");
+        else
+            decimalFormat = new DecimalFormat(format);
+        return decimalFormat.format(number);
     }
 }

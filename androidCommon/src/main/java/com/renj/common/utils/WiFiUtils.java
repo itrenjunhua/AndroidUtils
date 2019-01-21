@@ -15,15 +15,36 @@ import java.util.List;
  * ======================================================================
  * <p>
  * 作者：Renj
- * 邮箱：renjunhua@anlovek.com
+ * 邮箱：itrenjunhua@163.com
  * <p>
  * 创建时间：2018-12-19   19:42
  * <p>
  * 描述：WiFi相关工具类<br/><br/>
- * <b>注意：需要动态申请<br/>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{@link android.Manifest.permission#ACCESS_FINE_LOCATION},<br/>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{@link android.Manifest.permission#ACCESS_COARSE_LOCATION},<br/>
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{@link android.Manifest.permission#ACCESS_WIFI_STATE}<br/>权限</b>
+ * <b>注意：<br/>
+ * <b>1.清单文件添加<br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ * &lt;uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /&gt;<br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ * &lt;uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/&gt;<br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ * &lt;uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /&gt;<br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ * &lt;uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /&gt;<br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ * &lt;uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /&gt;<br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ * &lt;uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /&gt;<br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ * &lt;uses-permission android:name="android.permission.INTERNET" /&gt;<br/>权限</b><br/><br/>
+ * 2.需要动态申请<br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ * {@link android.Manifest.permission#ACCESS_FINE_LOCATION},<br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ * {@link android.Manifest.permission#ACCESS_COARSE_LOCATION},<br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ * * {@link android.Manifest.permission#CHANGE_WIFI_STATE},<br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ * {@link android.Manifest.permission#ACCESS_WIFI_STATE},<br/>权限</b><br/>
  * <p>
  * 修订历史：
  * <p>
@@ -119,9 +140,10 @@ public class WiFiUtils {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(intent.getAction())) { // 扫描完成
+                    boolean success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
                     List<ScanResult> list = wifiManager.getScanResults();
                     if (wiFiScanAdapter != null)
-                        wiFiScanAdapter.onFinishScan(list);
+                        wiFiScanAdapter.onFinishScan(success, list);
                 } else if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(intent.getAction())) { // 用于判断是否连接到了有效 WiFi（不能用于判断是否能够连接互联网）
                     NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
                     WifiInfo wifiInfo = intent.getParcelableExtra(WifiManager.EXTRA_WIFI_INFO);
@@ -153,7 +175,12 @@ public class WiFiUtils {
         /**
          * 监听 WiFi 的打开与关闭，与 WiFi 的连接无关
          *
-         * @param wifiState WiFi 打开关闭状态 5中状态，分别是：打开状态，打开中状态，关闭状态，关闭中状态，未知状态
+         * @param wifiState WiFi 打开关闭状态  5中状态<br/>
+         *                  {@link WifiManager#WIFI_STATE_DISABLED} 关闭状态<br/>
+         *                  {@link WifiManager#WIFI_STATE_DISABLING} 关闭中状态<br/>
+         *                  {@link WifiManager#WIFI_STATE_ENABLED} 打开状态<br/>
+         *                  {@link WifiManager#WIFI_STATE_ENABLING} 打开中状态<br/>
+         *                  {@link WifiManager#WIFI_STATE_UNKNOWN} 未知状态
          */
         public void onWiFiStatusChangeWiFi(int wifiState) {
         }
@@ -171,9 +198,10 @@ public class WiFiUtils {
         /**
          * 扫描完成
          *
+         * @param success     是否扫面成功，true：成功
          * @param scanResults 扫描结果
          */
-        public void onFinishScan(List<ScanResult> scanResults) {
+        public void onFinishScan(boolean success, List<ScanResult> scanResults) {
         }
     }
 }

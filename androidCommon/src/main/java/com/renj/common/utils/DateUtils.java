@@ -4,13 +4,9 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * ======================================================================
@@ -201,87 +197,30 @@ public class DateUtils {
     /**
      * 将多少秒格式化成 几天几小时几分钟的形式
      *
-     * @param ss 秒
+     * @param ss
      * @return
-     * @see #formatDuration(long)
-     * @see #formatDuration2(long)
-     * @see #formatDuration3(long)
      */
-    public static String formatDuration4(long ss) {
-        return formatDuration3(ss * 1000);
-    }
+    public static String formatDuration(long ss) {
+        ss = ss * SS; // 将秒变为毫秒
+        String duration;
+        long minutes = (long) Math.ceil(ss / MI);// 分钟
+        long hours = (long) Math.ceil(ss / HH);// 小时
+        long days = (long) Math.ceil(ss / DD);// 天
 
-    /**
-     * 将多少毫秒格式化成 几天几小时几分钟的形式
-     *
-     * @param millis 毫秒值
-     * @return
-     * @see #formatDuration(long)
-     * @see #formatDuration2(long)
-     * @see #formatDuration4(long)
-     */
-    public static String formatDuration3(long millis) {
-        int[] result = formatDuration(millis);
-
-        if (result[0] > 0) {
-            return result[0] + "天" + result[1] + "小时" + result[2] + "分钟";
-        } else if (result[1] > 0) {
-            return result[1] + "小时" + result[2] + "分钟";
-        } else if (result[2] > 0) {
-            return result[2] + "分钟";
-        } else {
-            return "不到1分钟";
-        }
-    }
-
-    /**
-     * 将多少秒格式化成 int[](result[0]:天；result[1]:时；result[2]:分) 的形式
-     *
-     * @param ss 秒值
-     * @return result[0]:天；result[1]:时；result[2]:分
-     * @see #formatDuration(long)
-     * @see #formatDuration3(long)
-     * @see #formatDuration4(long)
-     */
-    public static int[] formatDuration2(long ss) {
-        return formatDuration(ss * 1000);
-    }
-
-    /**
-     * 将多少毫秒格式化成 int[](result[0]:天；result[1]:时；result[2]:分) 的形式
-     *
-     * @param millis 毫秒值
-     * @return result[0]:天；result[1]:时；result[2]:分
-     * @see #formatDuration2(long)
-     * @see #formatDuration3(long)
-     * @see #formatDuration4(long)
-     */
-    public static int[] formatDuration(long millis) {
-        int[] result = new int[3];
-        int minutes = (int) Math.ceil(millis / MI);// 分钟
-        int hours = (int) Math.ceil(millis / HH);// 小时
-        int days = (int) Math.ceil(millis / DD);// 天
         if (days > 0) {
-            int tHours = hours - days * 24;
-            int tMinutes = minutes - tHours * 60 - days * 24 * 60;
-            result[0] = days;
-            result[1] = tHours;
-            result[2] = tMinutes;
+            long tHours = hours - days * 24;
+            long tMinutes = minutes - tHours * 60 - days * 24 * 60;
+            duration = days + "天" + tHours + "小时" + tMinutes + "分钟";
         } else if (hours > 0) {
-            int tMinutes = minutes - hours * 60;
-            result[0] = 0;
-            result[1] = hours;
-            result[2] = tMinutes;
+            long tMinutes = minutes - hours * 60;
+            duration = hours + "小时" + tMinutes + "分钟";
         } else if (minutes > 0) {
-            result[0] = 0;
-            result[1] = 0;
-            result[2] = minutes;
+            duration = minutes + "分钟";
         } else {
-            result[0] = 0;
-            result[1] = 0;
-            result[2] = 0;
+            duration = "不到1分钟";
         }
-        return result;
+
+        return duration;
     }
 
     /**
@@ -340,15 +279,6 @@ public class DateUtils {
             result[3] = (int) ((resultLong - result[0] * DD - result[1] * HH - result[2] * MI) / SS);
         }
         return result;
-    }
-
-    /**
-     * 获取当前时间的年、月、日、时、分、秒 数组形式返回
-     *
-     * @return 返回 int[] int[0]：年、int[1]：月，取值为 1-12、int[2]：日、int[3]：时、int[4]：分、int[5]：秒
-     */
-    public static int[] getCurrentDateArray() {
-        return getDateArray(DateUtils.currentTimeMillis());
     }
 
     /**
@@ -503,43 +433,5 @@ public class DateUtils {
                 calendar.get(Calendar.HOUR_OF_DAY) + h, calendar.get(Calendar.MINUTE) + m, calendar.get(Calendar.SECOND) + s);
 
         return calendar.getTimeInMillis();
-    }
-
-    /**
-     * 根据毫秒值和月份偏移值获取偏移后的一个月的日期和星期
-     *
-     * @param millis
-     * @param offsetMonth
-     * @return
-     */
-    public static List<Map<String, String>> getMonthDate(long millis, int offsetMonth) {
-        List<Map<String, String>> result = new ArrayList<>();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(millis);
-
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + offsetMonth, calendar.get(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
-
-        int actualMaximum = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1, 1, 0, 0);
-        long newMillis = calendar.getTimeInMillis();
-
-        for (int i = 0; i < actualMaximum; i++) {
-            Map<String, String> map = new HashMap<>();
-            calendar.setTimeInMillis(dateChange2(newMillis, 0, 0, i, 0, 0, 0));
-            map.put("year", calendar.get(Calendar.YEAR) + "");
-            map.put("month", (calendar.get(Calendar.MONTH) + 1) + "");
-            map.put("day", calendar.get(Calendar.DAY_OF_MONTH) + "");
-            map.put("hour", calendar.get(Calendar.HOUR_OF_DAY) + "");
-            map.put("minute", calendar.get(Calendar.MINUTE) + "");
-            map.put("second", calendar.get(Calendar.SECOND) + "");
-            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-            map.put("week", weeks[dayOfWeek < 0 ? 0 : dayOfWeek]);
-            result.add(map);
-        }
-
-        return result;
     }
 }

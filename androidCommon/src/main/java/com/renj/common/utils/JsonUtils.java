@@ -3,28 +3,19 @@ package com.renj.common.utils;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * ======================================================================
  * <p>
  * 作者：Renj
- * 邮箱：itrenjunhua@163.com
+ * 邮箱：renjunhua@anlovek.com
  * <p>
  * 创建时间：2018-04-20   16:29
  * <p>
@@ -54,77 +45,6 @@ public class JsonUtils {
             return null;
         }
     }
-
-    /**
-     * JavaBean 转换为json字符串
-     *
-     * @param bean
-     * @param <T>
-     * @return
-     */
-    @Nullable
-    public static <T> String beanToJsonString(@NonNull T bean) {
-        try {
-            Gson gson = new Gson();
-            return gson.toJson(bean);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * json 字符串转换成 {@code List<JavaBean>}
-     *
-     * @param jsonString json 字符串
-     * @param clazz      JavaBean.class
-     * @param <T>
-     * @return {@code List<JavaBean>}
-     */
-    @Nullable
-    public static <T> List<T> jsonStringToListBean(@NonNull String jsonString, final Class<T> clazz) {
-        try {
-            Gson gson = new Gson();
-            return gson.fromJson(jsonString, new ParameterizedType() {
-                @Override
-                public Type[] getActualTypeArguments() {
-                    return new Type[]{clazz};
-                }
-
-                @Override
-                public Type getRawType() {
-                    return List.class;
-                }
-
-                @Override
-                public Type getOwnerType() {
-                    return null;
-                }
-            });
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * {@code List<JavaBean>} 转换为json字符串
-     *
-     * @param listBeans
-     * @param <T>
-     * @return
-     */
-    @Nullable
-    public static <T> String listBeanToJsonString(@NonNull List<T> listBeans) {
-        try {
-            Gson gson = new Gson();
-            return gson.toJson(listBeans);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
 
     /**
      * json 字符串 变为 {@link Map<String,Object>}

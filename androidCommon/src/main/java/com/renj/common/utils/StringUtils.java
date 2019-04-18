@@ -6,13 +6,11 @@ import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 
-import java.util.List;
-
 /**
  * ======================================================================
  * <p>
  * 作者：Renj
- * 邮箱：itrenjunhua@163.com
+ * 邮箱：renjunhua@anlovek.com
  * <p>
  * 创建时间：2018-11-12   15:52
  * <p>
@@ -62,7 +60,7 @@ public class StringUtils {
     @org.jetbrains.annotations.Contract(value = "null -> false")
     public static boolean isEquals(String... args) {
         if (args == null) return false;
-        if (args.length <= 1) return false;
+        if(args.length <= 1) return false;
         String last = args[0];
         if (isEmpty(last)) return false;
         for (int i = 1; i < args.length; i++) {
@@ -86,22 +84,6 @@ public class StringUtils {
     }
 
     /**
-     * 对多个 "" 、"null"、{@code null} 进行处理，返回 ""，否则返回 原字符串
-     *
-     * @param values 需要处理的字符串
-     * @return 返回 "" 或者 原字符串
-     */
-    public static String handlerString(String... values) {
-        if (values == null) return "";
-
-        String result = "";
-        for (String value : values) {
-            result += handlerString(value);
-        }
-        return result;
-    }
-
-    /**
      * 返回一个高亮spannable
      *
      * @param content 全部文本内容
@@ -120,34 +102,5 @@ public class StringUtils {
         CharacterStyle span = new ForegroundColorSpan(color);
         spannable.setSpan(span, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannable;
-    }
-
-    /**
-     * 将 {@link List<String>} 按指定分隔符转变为 {@link String}
-     *
-     * @param stringList {@link List<String>}
-     * @param split      分隔符
-     * @return {@link String}
-     */
-    public static String concat(List<String> stringList, String split) {
-        if (ListUtils.isEmpty(stringList)) return "";
-        StringBuffer sb = new StringBuffer();
-        for (String string : stringList) {
-            sb.append(string);
-            sb.append(split);
-        }
-        return sb.substring(0, sb.length() - 1);
-    }
-
-    /**
-     * 将 {@link String} 变为 {@link List<String>}
-     *
-     * @param skipNumber {@link String}
-     * @param split      分隔符
-     * @return {@link List<String>}
-     */
-    public static List<String> splitToList(String skipNumber, String split) {
-        String[] skipStrings = skipNumber.split(split);
-        return ListUtils.fromArray(skipStrings);
     }
 }

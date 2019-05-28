@@ -37,17 +37,22 @@ public class BitmapUtils {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(bitmapPath, options);
+        int inSampleSize = calculateInSampleSize(options, targetWidth, targetHeight);
+        options.inJustDecodeBounds = false;
+        return inSampleSize;
+    }
+
+    private static int calculateInSampleSize(BitmapFactory.Options options, int targetWidth, int targetHeight) {
         int outWidth = options.outWidth;
         int outHeight = options.outHeight;
-
         if (targetWidth > outWidth && targetHeight > outHeight) {
             return 1;
         } else {
-            int sampleSize = 2;
-            while ((outWidth / sampleSize > targetWidth) && (outHeight / sampleSize > targetHeight)) {
-                sampleSize *= 2;
+            int inSampleSize = 2;
+            while ((outWidth / inSampleSize > targetWidth) && (outHeight / inSampleSize > targetHeight)) {
+                inSampleSize *= 2;
             }
-            return sampleSize;
+            return inSampleSize;
         }
     }
 

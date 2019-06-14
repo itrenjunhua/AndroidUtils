@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import com.renj.common.utils.UIUtils
+import com.renj.common.utils.ViewUtils.findViewById
 import com.renj.common.weight.CircleImageView
 import com.renj.common.weight.dialog.CustomDialog
 

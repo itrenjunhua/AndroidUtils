@@ -38,7 +38,7 @@ public class NotificationUtils {
     private NotificationUtils() {
     }
 
-    public static NotificationUtils newInstance() {
+    public static NotificationUtils getInstance() {
         if (instance == null) {
             synchronized (NotificationUtils.class) {
                 if (instance == null) {

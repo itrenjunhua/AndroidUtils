@@ -1,6 +1,5 @@
 package com.renj.common.utils;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.gson.Gson;
@@ -53,7 +52,6 @@ public class JsonUtils {
      * @return 转变后的 {@link Map<String,Object>} 对象
      */
     @NonNull
-    @CheckResult(suggest = "结果从未使用过")
     public static Map<String, Object> jsonStringToMap(String jsonString) {
         if (StringUtils.isEmpty(jsonString)) return new HashMap<>();
 
@@ -81,7 +79,6 @@ public class JsonUtils {
      * @return 转变后的 {@link JSONObject} 对象
      */
     @NonNull
-    @CheckResult(suggest = "结果从未使用过")
     public static JSONObject mapToJsonObject(Map<String, Object> map) {
         JSONObject result = new JSONObject();
 
@@ -106,7 +103,6 @@ public class JsonUtils {
      * @return 转变后的 {@link String}
      */
     @NonNull
-    @CheckResult(suggest = "结果从未使用过")
     public static String mapToJsonString(Map<String, Object> map) {
         return mapToJsonObject(map).toString();
     }
@@ -118,7 +114,6 @@ public class JsonUtils {
      * @return 转变后的 {@link List<Map<String,Object>>} 对象
      */
     @NonNull
-    @CheckResult(suggest = "结果从未使用过")
     public static ArrayList<Map<String, Object>> jsonStringToList(String jsonString) {
         ArrayList<Map<String, Object>> result = new ArrayList<>();
 
@@ -147,7 +142,6 @@ public class JsonUtils {
      * @return 转变后的 {@link JSONArray} 对象
      */
     @NonNull
-    @CheckResult(suggest = "结果从未使用过")
     public static JSONArray listToJsonArray(List<Map<String, Object>> list) {
         JSONArray result = new JSONArray();
 
@@ -166,7 +160,6 @@ public class JsonUtils {
      * @return 转变后的 {@link String}
      */
     @NonNull
-    @CheckResult(suggest = "结果从未使用过")
     public static String listToJsonString(List<Map<String, Object>> list) {
         return listToJsonArray(list).toString();
     }

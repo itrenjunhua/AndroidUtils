@@ -37,4 +37,14 @@ public class SystemUtils {
         }
         context.startActivity(localIntent);
     }
+
+    /**
+     * 打开系统网络设置页面
+     *
+     * @param context
+     */
+    public static void openNetWorkActivity(Context context) {
+        Intent intent = new Intent("android.settings.WIRELESS_SETTINGS");
+        context.startActivity(intent);
+    }
 }

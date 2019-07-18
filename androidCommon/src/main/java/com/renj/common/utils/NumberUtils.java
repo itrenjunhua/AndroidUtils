@@ -1,5 +1,9 @@
 package com.renj.common.utils;
 
+import android.support.annotation.NonNull;
+
+import java.text.DecimalFormat;
+
 /**
  * ======================================================================
  * <p>
@@ -17,7 +21,7 @@ package com.renj.common.utils;
 public class NumberUtils {
 
     /**
-     * 将字符串强制转换为 int 数据
+     * 将字符串强制转换为 int 数据，已处理 {@link NumberFormatException}
      */
     public static int valueOfInteger(String numberString) {
         try {
@@ -29,7 +33,7 @@ public class NumberUtils {
     }
 
     /**
-     * 将字符串强制转换为 double 数据
+     * 将字符串强制转换为 double 数据，已处理 {@link NumberFormatException}
      */
     public static double valueOfDouble(String numberString) {
         try {
@@ -38,5 +42,57 @@ public class NumberUtils {
             e.printStackTrace();
             return 0.00;
         }
+    }
+
+    /**
+     * 格式化double，保留2为小数 每 3 位加 "," 号分割
+     *
+     * @param formatNum
+     * @return
+     */
+    public static String formatDoubleComma(@NonNull double formatNum) {
+        DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat.getInstance();
+        decimalFormat.applyPattern("#,##0.00");
+        //decimalFormat.setGroupingSize(3);
+        return decimalFormat.format(formatNum);
+    }
+
+    /**
+     * 格式化double，保留2为小数，不加 "," 号分割
+     *
+     * @param formatNum
+     * @return
+     */
+    public static String formatDouble(@NonNull double formatNum) {
+        DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat.getInstance();
+        decimalFormat.applyPattern("##0.00");
+        //decimalFormat.setGroupingSize(3);
+        return decimalFormat.format(formatNum);
+    }
+
+    /**
+     * 格式化double，不保留小数，每 3 位加 "," 号分割
+     *
+     * @param formatNum
+     * @return
+     */
+    public static String formatDoubleToIntComma(@NonNull double formatNum) {
+        DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat.getInstance();
+        decimalFormat.applyPattern("#,##0");
+        //decimalFormat.setGroupingSize(3);
+        return decimalFormat.format(formatNum);
+    }
+
+    /**
+     * 格式化double，不保留小数，不加 "," 号分割
+     *
+     * @param formatNum
+     * @return
+     */
+    public static String formatDoubleToInt(@NonNull double formatNum) {
+        DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat.getInstance();
+        decimalFormat.applyPattern("##0");
+        //decimalFormat.setGroupingSize(3);
+        return decimalFormat.format(formatNum);
     }
 }

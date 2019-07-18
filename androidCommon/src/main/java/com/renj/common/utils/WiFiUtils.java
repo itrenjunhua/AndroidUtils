@@ -38,7 +38,7 @@ public class WiFiUtils {
      *
      * @return
      */
-    public static WiFiUtils newInstance() {
+    public static WiFiUtils getInstance() {
         if (instance == null) {
             synchronized (WiFiUtils.class) {
                 if (instance == null) {
@@ -114,6 +114,12 @@ public class WiFiUtils {
         }
     }
 
+    /**
+     * 创建WiFi扫描通知广播，注册广播之后可以监听WiFi扫描、连接状态的改变
+     *
+     * @param wiFiScanAdapter
+     * @return
+     */
     public BroadcastReceiver createBroadcastReceiver(final WiFiScanAdapter wiFiScanAdapter) {
         return new BroadcastReceiver() {
             @Override

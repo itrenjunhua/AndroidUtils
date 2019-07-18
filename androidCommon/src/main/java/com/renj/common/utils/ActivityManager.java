@@ -23,16 +23,20 @@ import java.util.LinkedList;
 public class ActivityManager {
     private static LinkedList<Activity> activities = new LinkedList<>();
 
-    public static void addActivity(@NonNull Activity activity){
+    public static void addActivity(@NonNull Activity activity) {
         activities.add(activity);
     }
 
-    public static void removeActivity(@NonNull Activity activity){
+    public static void removeActivity(@NonNull Activity activity) {
         activities.remove(activity);
     }
 
     @Contract(pure = true)
-    public static LinkedList<Activity> getActivities(){
+    public static LinkedList<Activity> getActivities() {
         return activities;
+    }
+
+    public static void clear() {
+        activities.clear();
     }
 }

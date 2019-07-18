@@ -59,7 +59,7 @@ public class SPUtils {
      *
      * @return SPUtils 实例
      */
-    public static SPUtils newInstance() {
+    public static SPUtils getInstance() {
         if (null == instance) {
             synchronized (SPUtils.class) {
                 if (null == instance) {

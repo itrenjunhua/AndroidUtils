@@ -12,10 +12,6 @@ ext {
     def dependVersion = [
             androidSupportV7        : "27.1.1",
             androidSupportConstraint: "1.0.2",
-            junitSupport            : "4.12",
-            supportTestRunner       : "1.0.1",
-            supportTestEspresso     : "3.0.1",
-            butterknife             : "8.8.1",
             jetbrainsAnnotations    : "13.0",
             gson                    : "2.8.5",
     ]
@@ -23,16 +19,7 @@ ext {
     dependencies = [
             // support
             "androidSupportV7"        : "com.android.support:appcompat-v7:${dependVersion.androidSupportV7}",
-            "recyclerviewV7"          : "com.android.support:recyclerview-v7:${dependVersion.androidSupportV7}",
-            "design"                  : "com.android.support:design:${dependVersion.androidSupportV7}",
             "androidSupportConstraint": "com.android.support.constraint:constraint-layout:${dependVersion.androidSupportConstraint}",
-            // di
-            "butterknife"             : "com.jakewharton:butterknife:${dependVersion.butterknife}",
-            "butterknifeCompiler"     : "com.jakewharton:butterknife-compiler:${dependVersion.butterknife}",
-            // test
-            "junitSupport"            : "junit:junit:${dependVersion.junitSupport}",
-            "supportTestRunner"       : "com.android.support.test:runner:${dependVersion.supportTestRunner}",
-            "supportTestEspresso"     : "com.android.support.test.espresso:espresso-core:${dependVersion.supportTestEspresso}",
             // jetbrains 注解
             "jetbrainsAnnotations"    : "org.jetbrains:annotations:${dependVersion.jetbrainsAnnotations}",
             // Gson

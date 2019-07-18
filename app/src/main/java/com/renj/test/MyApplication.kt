@@ -1,13 +1,13 @@
 package com.renj.test
 
 import android.app.Application
-import com.renj.common.CommonUtils
+import com.renj.utils.AndroidUtils
 
 /**
  * ======================================================================
  * <p>
  * 作者：Renj
- * 邮箱：renjunhua@anlovek.com
+ * 邮箱：itrenjunhua@163.com
  * <p>
  * 创建时间：2018-11-14   19:08
  * <p>
@@ -20,6 +20,6 @@ import com.renj.common.CommonUtils
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        CommonUtils.init(this)
+        AndroidUtils.init(this)
     }
 }

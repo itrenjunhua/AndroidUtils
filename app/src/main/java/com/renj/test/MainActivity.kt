@@ -3,10 +3,9 @@ package com.renj.test
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
-import com.renj.common.utils.UIUtils
-import com.renj.common.utils.ViewUtils.findViewById
-import com.renj.common.weight.CircleImageView
-import com.renj.common.weight.dialog.CustomDialog
+import com.renj.utils.common.UIUtils
+import com.renj.utils.weight.CircleImageView
+import com.renj.utils.weight.dialog.CustomDialog
 
 internal class MainActivity : AppCompatActivity() {
     private lateinit var showDialog: Button

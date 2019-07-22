@@ -2,6 +2,7 @@ package com.renj.test
 
 import android.app.Application
 import com.renj.utils.AndroidUtils
+import com.renj.utils.check.ANRWatchDog
 
 /**
  * ======================================================================
@@ -21,5 +22,8 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         AndroidUtils.init(this)
+        // debug模式下增加anr监测
+        if (AndroidUtils.isDebug())
+            ANRWatchDog.init()
     }
 }

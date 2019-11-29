@@ -14,7 +14,8 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
+
+import java.io.File;
 
 /**
  * ======================================================================
@@ -378,7 +379,7 @@ public class SystemPhotoUtils {
         if (data == null) return null;
 
         if (isMoreHeightVersion(Build.VERSION_CODES.KITKAT)) {
-            String pathFormUri = getPathFormUri(context, data.getData());
+            String pathFormUri = getPathFormUri(context, data.getData(), true);
             if (pathFormUri == null) return null;
 
             return Uri.parse(pathFormUri);
@@ -387,17 +388,38 @@ public class SystemPhotoUtils {
     }
 
     /**
+     * 打开系统相册选择了图片之后，获取返回的File，兼容不同版本
+     *
+     * @param context {@link Context}
+     * @param data    {@code onActivityResult(int requestCode, int resultCode, Intent data)} 方法中的 {@code data}
+     * @return 解析之后的File
+     */
+    @Nullable
+    public static File getFileForPhotosReturn(@NonNull Context context, Intent data) {
+        if (data == null) return null;
+
+        if (isMoreHeightVersion(Build.VERSION_CODES.KITKAT)) {
+            String pathFormUri = getPathFormUri(context, data.getData(), false);
+            if (pathFormUri == null) return null;
+
+            return new File(pathFormUri);
+        } else {
+            if (data.getData() == null) return null;
+            return new File(data.getData().getPath());
+        }
+    }
+
+    /**
      * Android KITKAT (4.4) 以上从 {@link Uri} 中读取图片路径
      *
-     * @param context 上下文对象
-     * @param uri     当前相册照片的  {@link Uri}
+     * @param context        上下文对象
+     * @param uri            当前相册照片的  {@link Uri}
+     * @param needFilePrefix 是否需要前缀 "file:///"
      * @return 解析后的 {@link Uri} 对应的 {@link String}
      */
     @Nullable
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static String getPathFormUri(@NonNull Context context, @NonNull Uri uri) {
-
-        String pathHead = "file:///";
+    public static String getPathFormUri(@NonNull Context context, @NonNull Uri uri, boolean needFilePrefix) {
+        String pathHead = needFilePrefix ? "file:///" : "";
         // DocumentProvider
         if (isMoreHeightVersion(Build.VERSION_CODES.KITKAT) && DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider

@@ -2,7 +2,6 @@ package com.renj.test
 
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import com.renj.utils.system.NotificationUtils
 

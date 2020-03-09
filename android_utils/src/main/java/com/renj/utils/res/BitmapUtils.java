@@ -5,8 +5,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.util.Base64;
 
-import java.io.*;
+import com.renj.utils.check.CheckUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * ======================================================================
@@ -186,4 +194,48 @@ public class BitmapUtils {
         }
         return size;
     }
+
+    /**
+     * 将图片变为 Base64 数据
+     *
+     * @param bitmap  需要编码的 {@link Bitmap} 对象
+     * @param quality 图片质量(是否压缩图片) 0-100 100表示不压缩
+     */
+    public static String encodeToString(Bitmap bitmap, int quality) {
+        if (CheckUtils.isNull(bitmap)) return "";
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        // 读取图片到ByteArrayOutputStream
+        bitmap.compress(Bitmap.CompressFormat.PNG, quality, baos); //参数如果为100那么就不压缩
+        byte[] bytes = baos.toByteArray();
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
+
+    /**
+     * 图片 Base64 数据变为 {@link Bitmap}
+     *
+     * @param baseString Base64 数据
+     * @param cleanFlag  是否需要清除 “data:image/*;base64, ”  标识  true：需要 false：不需要
+     * @return 解码后的 {@link Bitmap} 对象
+     */
+    public static Bitmap decodeToBitmap(String baseString, boolean cleanFlag) {
+        if (StringUtils.isEmpty(baseString)) return null;
+
+        Bitmap bitmap = null;
+        try {
+            // 注意:编码后的图片会有“data:image/*;base64, ”标识，在进行解码时我们需要去掉这一部分，否则会导致解码失败
+            if (cleanFlag) {
+                byte[] bitmapArray = Base64.decode(baseString.split(",")[1], Base64.DEFAULT);
+                bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
+            } else {
+                byte[] bitmapArray = Base64.decode(baseString, Base64.DEFAULT);
+                bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+
 }

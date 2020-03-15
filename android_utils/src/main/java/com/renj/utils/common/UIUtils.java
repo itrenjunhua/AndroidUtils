@@ -1,5 +1,6 @@
 package com.renj.utils.common;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Handler;
@@ -9,6 +10,7 @@ import android.support.annotation.StringRes;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.Toast;
+
 import com.renj.utils.AndroidUtils;
 import com.renj.utils.res.ResUtils;
 
@@ -106,6 +108,17 @@ public class UIUtils {
         Point point = new Point();
         windowManager.getDefaultDisplay().getRealSize(point);
         return point;
+    }
+
+    /**
+     * 设置屏幕透明度
+     *
+     * @param bgAlpha 最终透明度 0.0~1.0
+     */
+    public static void backgroundAlpha(@NonNull Activity activity, float bgAlpha) {
+        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+        lp.alpha = bgAlpha;
+        activity.getWindow().setAttributes(lp);
     }
 
     /**

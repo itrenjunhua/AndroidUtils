@@ -1,5 +1,6 @@
 package com.renj.utils.system;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -45,6 +46,56 @@ public class SystemUtils {
      */
     public static void openNetWorkActivity(Context context) {
         Intent intent = new Intent("android.settings.WIRELESS_SETTINGS");
+        context.startActivity(intent);
+    }
+
+    /**
+     * 跳转到应用市场，需要注意可能出现不同手机品牌的适配问题(小米、三星、华为、乐视等)，暂时测试华为p8(ALE_UL00)没问题
+     *
+     * @param context
+     * @param packageName
+     */
+    public static void goToMarket(@NonNull Context context, @NonNull String packageName) {
+        // 获取手机就品牌和型号
+        // Log.i("CommonUtils", Build.BRAND + " ------ " + Build.MODEL);
+        Uri uri = Uri.parse("market://details?id=" + packageName);
+        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        try {
+            context.startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 三星品牌手机跳转到应用市场
+     *
+     * @param context
+     * @param packageName
+     */
+    public static void goToSamsungappsMarket(@NonNull Context context, @NonNull String packageName) {
+        Uri uri = Uri.parse("http://www.samsungapps.com/appquery/appDetail.as?appId=" + packageName);
+        Intent goToMarket = new Intent();
+        goToMarket.setClassName("com.sec.android.app.samsungapps", "com.sec.android.app.samsungapps.Main");
+        goToMarket.setData(uri);
+        try {
+            context.startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 乐视手机跳转到应用市场
+     *
+     * @param context
+     * @param packageName
+     */
+    public static void goToLeTVStoreDetail(@NonNull Context context, @NonNull String packageName) {
+        Intent intent = new Intent();
+        intent.setClassName("com.letv.app.appstore", "com.letv.app.appstore.appmodule.details.DetailsActivity");
+        intent.setAction("com.letv.app.appstore.appdetailactivity");
+        intent.putExtra("packageName", packageName);
         context.startActivity(intent);
     }
 }

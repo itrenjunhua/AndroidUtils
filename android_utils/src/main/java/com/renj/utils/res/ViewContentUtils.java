@@ -1,5 +1,6 @@
 package com.renj.utils.res;
 
+import android.graphics.Paint;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.widget.EditText;
@@ -52,5 +53,17 @@ public class ViewContentUtils {
         for (TextView textView : textViews) {
             textView.setTextColor(color);
         }
+    }
+
+    /**
+     * 给TextView增加删除线
+     *
+     * @param textView
+     */
+    public static void setStrikeThrough(TextView textView) {
+        if (textView == null) {
+            return;
+        }
+        textView.getPaint().setFlags(Paint.ANTI_ALIAS_FLAG | Paint.STRIKE_THRU_TEXT_FLAG);
     }
 }

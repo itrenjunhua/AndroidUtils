@@ -344,7 +344,6 @@ public class SystemPhotoUtils {
      *
      * @return
      */
-    @org.jetbrains.annotations.Contract(pure = true)
     private static boolean isMoreHeightVersion(int targetVersionCode) {
         return Build.VERSION.SDK_INT >= targetVersionCode;
     }

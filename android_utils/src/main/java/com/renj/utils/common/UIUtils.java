@@ -34,7 +34,6 @@ public class UIUtils {
      *
      * @return 全局的上下文
      */
-    @org.jetbrains.annotations.Contract(pure = true)
     public static Context getContext() {
         return AndroidUtils.getApplication();
     }
@@ -126,7 +125,6 @@ public class UIUtils {
      *
      * @return 主线程的Handler
      */
-    @org.jetbrains.annotations.Contract(pure = true)
     public static Handler getHandler() {
         return new Handler(Looper.getMainLooper());
     }

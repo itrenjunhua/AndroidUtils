@@ -121,10 +121,10 @@ public class SPUtils {
     }
 
 
-    // ------------------- 每次保存一条数据方法 ------------------- //
+    // ------------------- 每次增加一条数据方法 ------------------- //
 
     /**
-     * 增加保存 boolean 类型的值。<b>注意：增加完所有要保存的数据之后，一定需要调用 {@link #commit()} 提交保存。</b>
+     * 增加保存 boolean 类型的值。<b>注意：增加完所有要保存的数据之后，一定需要调用 {@link #commit()} 或者 {@link #apply()} 提交保存。</b>
      *
      * @param key   键名
      * @param value 值
@@ -136,7 +136,7 @@ public class SPUtils {
     }
 
     /**
-     * 增加保存 String 类型的值。<b>注意：增加完所有要保存的数据之后，一定需要调用 {@link #commit()} 提交保存。</b>
+     * 增加保存 String 类型的值。<b>注意：增加完所有要保存的数据之后，一定需要调用 {@link #commit()} 或者 {@link #apply()} 提交保存。</b>
      *
      * @param key   键名
      * @param value 值
@@ -148,7 +148,7 @@ public class SPUtils {
     }
 
     /**
-     * 增加保存 int 类型的值。<b>注意：增加完所有要保存的数据之后，一定需要调用 {@link #commit()} 提交保存。</b>
+     * 增加保存 int 类型的值。<b>注意：增加完所有要保存的数据之后，一定需要调用 {@link #commit()} 或者 {@link #apply()} 提交保存。</b>
      *
      * @param key   键名
      * @param value 值
@@ -160,7 +160,7 @@ public class SPUtils {
     }
 
     /**
-     * 增加保存 float 类型的值。<b>注意：增加完所有要保存的数据之后，一定需要调用 {@link #commit()} 提交保存。</b>
+     * 增加保存 float 类型的值。<b>注意：增加完所有要保存的数据之后，一定需要调用 {@link #commit()} 或者 {@link #apply()} 提交保存。</b>
      *
      * @param key   键名
      * @param value 值
@@ -172,7 +172,7 @@ public class SPUtils {
     }
 
     /**
-     * 增加保存 long 类型的值。<b>注意：增加完所有要保存的数据之后，一定需要调用 {@link #commit()} 提交保存。</b>
+     * 增加保存 long 类型的值。<b>注意：增加完所有要保存的数据之后，一定需要调用 {@link #commit()} 或者 {@link #apply()} 提交保存。</b>
      *
      * @param key   键名
      * @param value 值
@@ -184,7 +184,7 @@ public class SPUtils {
     }
 
     /**
-     * 增加保存 Set<String> 类型的值。<b>注意：增加完所有要保存的数据之后，一定需要调用 {@link #commit()} 提交保存。</b>
+     * 增加保存 Set<String> 类型的值。<b>注意：增加完所有要保存的数据之后，一定需要调用 {@link #commit()} 或者 {@link #apply()} 提交保存。</b>
      *
      * @param key    键名
      * @param values 值
@@ -202,6 +202,12 @@ public class SPUtils {
         mSharedPreferencesEdit.commit();
     }
 
+    /**
+     * 提交 addXxx 系列方法增加的数据
+     */
+    public void apply() {
+        mSharedPreferencesEdit.apply();
+    }
 
     // ------------------- 获取数据数据方法 ------------------- //
 

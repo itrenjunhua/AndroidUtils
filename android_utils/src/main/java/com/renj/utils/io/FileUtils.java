@@ -85,4 +85,62 @@ public class FileUtils {
 
         //return Formatter.formatFileSize(UIUtils.getContext(),length);
     }
+
+    /**
+     * 删除文件夹
+     *
+     * @param dirFile 需要删除的文件夹
+     */
+    public static void deleteDirectory(File dirFile) {
+        if (dirFile == null) {
+            return;
+        }
+        File[] files = dirFile.listFiles();
+        if (files == null) {
+            return;
+        }
+        for (File file : files) {
+            if (file.isDirectory()) {
+                deleteDirectory(file);
+            } else {
+                file.delete();
+            }
+        }
+    }
+
+    /**
+     * 删除文件夹，并指定过滤掉部分文件
+     *
+     * @param dirFile     需要删除的文件夹
+     * @param filterFiles 需要过滤掉的文件，或者文件夹名称
+     */
+    public static void deleteDirectory(File dirFile, String... filterFiles) {
+        if (dirFile == null) {
+            return;
+        }
+        File[] files = dirFile.listFiles();
+        if (files == null) {
+            return;
+        }
+        boolean isContinue;
+        for (File file : files) {
+            isContinue = false;
+            if (filterFiles != null) {
+                for (String filterFile : filterFiles) {
+                    if (filterFile.equals(file.getName())) {
+                        isContinue = true;
+                        break;
+                    }
+                }
+            }
+            if (isContinue)
+                continue;
+
+            if (file.isDirectory()) {
+                deleteDirectory(file, filterFiles);
+            } else {
+                file.delete();
+            }
+        }
+    }
 }

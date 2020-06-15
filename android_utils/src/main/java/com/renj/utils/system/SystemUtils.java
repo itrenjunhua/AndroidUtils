@@ -114,11 +114,11 @@ public class SystemUtils {
     public static void installApk(String authority, String apkFilePath) {
         File apkFile = new File(apkFilePath);
         if (!apkFile.exists()) {
-            UIUtils.showToastSafe("安装文件不存在!");
+            UIUtils.showToast("安装文件不存在!");
             return;
         }
         if (!isApkCanInstall(apkFilePath)) {
-            UIUtils.showToastSafe("安装失败!");
+            UIUtils.showToast("安装失败!");
             apkFile.deleteOnExit();
             return;
         }
@@ -131,7 +131,7 @@ public class SystemUtils {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             UIUtils.getContext().startActivity(intent);
         } catch (Exception e) {
-            UIUtils.showToastSafe("安装失败!");
+            UIUtils.showToast("安装失败!");
             e.printStackTrace();
         }
     }

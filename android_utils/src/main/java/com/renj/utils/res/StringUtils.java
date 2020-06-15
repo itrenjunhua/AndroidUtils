@@ -51,6 +51,32 @@ public class StringUtils {
     }
 
     /**
+     * 字符串不为空
+     *
+     * @param value
+     * @return
+     */
+    public static boolean notEmpty(String value) {
+        return !isEmpty(value);
+    }
+
+    /**
+     * 判断多个字符串是否不为空
+     *
+     * @param args 需要判断的字符串
+     * @return 如果有一个为空，则返回false，只有全部不为空才返回true
+     */
+    public static boolean notEmptys(String... args) {
+        if (null == args) return false;
+        if (0 == args.length) return false;
+
+        for (String arg : args) {
+            if (isEmpty(arg)) return false;
+        }
+        return true;
+    }
+
+    /**
      * 判断多个字符串是否相等
      *
      * @param args 需要判断的字符串数组

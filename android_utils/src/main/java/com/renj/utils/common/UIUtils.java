@@ -202,8 +202,8 @@ public class UIUtils {
      *
      * @param resId 显示信息的资源id
      */
-    public static void showToastSafe(@StringRes int resId) {
-        showToastSafe(ResUtils.getString(resId));
+    public static void showToast(@StringRes int resId) {
+        showToast(ResUtils.getString(resId));
     }
 
     /**
@@ -211,14 +211,14 @@ public class UIUtils {
      *
      * @param str 现实的信息
      */
-    public static void showToastSafe(final String str) {
+    public static void showToast(final String str) {
         if (isRunInMainThread()) {
-            showToast(str);
+            realShowToast(str);
         } else {
             post(new Runnable() {
                 @Override
                 public void run() {
-                    showToast(str);
+                    realShowToast(str);
                 }
             });
         }
@@ -231,7 +231,7 @@ public class UIUtils {
      *
      * @param str
      */
-    private static void showToast(String str) {
+    private static void realShowToast(String str) {
         if (null != getContext()) {
             if (null == mToast) {
                 mToast = Toast.makeText(getContext(), str, Toast.LENGTH_SHORT);

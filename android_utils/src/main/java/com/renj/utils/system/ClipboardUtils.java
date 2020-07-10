@@ -1,7 +1,9 @@
 package com.renj.utils.system;
 
+import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.os.Build;
 import android.text.TextUtils;
 
 import com.renj.utils.common.UIUtils;
@@ -22,6 +24,7 @@ import static android.content.Context.CLIPBOARD_SERVICE;
  * <p>
  * ======================================================================
  */
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class ClipboardUtils {
     /**
      * 将内容保存到剪贴板，并且提示 复制成功、复制失败
@@ -58,7 +61,7 @@ public class ClipboardUtils {
             cmb.setPrimaryClip(ClipData.newPlainText("text", textCase));
         }
         // 不为null时提示
-        if (StringUtils.notEmptys(successMsg, failMsg)) {
+        if (StringUtils.notEmpty(successMsg, failMsg)) {
             if (getClipboardFirstData().equals(textCase)) {
                 UIUtils.showToast(successMsg);
             } else {

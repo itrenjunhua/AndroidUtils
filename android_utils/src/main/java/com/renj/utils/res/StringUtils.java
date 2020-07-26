@@ -40,7 +40,7 @@ public class StringUtils {
      * @param args 需要判断的字符串
      * @return 如果有一个为空，则返回true，只有全部不为空才返回false
      */
-    public static boolean isEmptys(String... args) {
+    public static boolean isEmpty(String... args) {
         if (null == args) return true;
         if (0 == args.length) return true;
 
@@ -66,7 +66,7 @@ public class StringUtils {
      * @param args 需要判断的字符串
      * @return 如果有一个为空，则返回false，只有全部不为空才返回true
      */
-    public static boolean notEmptys(String... args) {
+    public static boolean notEmpty(String... args) {
         if (null == args) return false;
         if (0 == args.length) return false;
 

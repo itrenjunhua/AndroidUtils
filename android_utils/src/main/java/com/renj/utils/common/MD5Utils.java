@@ -1,5 +1,7 @@
 package com.renj.utils.common;
 
+import com.renj.utils.res.StringUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -95,8 +97,13 @@ public class MD5Utils {
     private static String convertToHexString(byte data[]) {
         StringBuilder strBuffer = new StringBuilder();
         for (byte aData : data) {
-            strBuffer.append(Integer.toHexString(0xff & aData));
+            String str = Integer.toHexString(0xFF & aData);
+            if (StringUtils.notEmpty(str)) {
+                if (str.length() == 1)
+                    str = "0" + str;
+                strBuffer.append(str);
+            }
         }
-        return strBuffer.toString();
+        return strBuffer.toString().toUpperCase();
     }
 }

@@ -319,6 +319,7 @@ public class SystemPhotoUtils {
         Intent intent = new Intent("com.android.camera.action.CROP");
         if (isMoreHeightVersion(Build.VERSION_CODES.N)) {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         }
         intent.setDataAndType(orgUri, "image/*");
         intent.putExtra("crop", "true");    // 发送裁剪信号

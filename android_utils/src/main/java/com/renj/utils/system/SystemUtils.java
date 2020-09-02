@@ -1,5 +1,6 @@
 package com.renj.utils.system;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -168,5 +169,28 @@ public class SystemUtils {
                 return true;
         }
         return false;
+    }
+
+    /**
+     * 打开浏览器,并跳转到指定页面。先判断是否有系统浏览器，有直接打开，没有就弹出选择浏览器框
+     *
+     * @param context Context
+     * @param url     页面链接
+     */
+    public static void openBrowser(Context context, String url) {
+        if (context == null) return;
+
+        Intent intent = new Intent();
+        Uri uri = Uri.parse(url);
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setData(uri);
+        if (!(context instanceof Activity))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+        } else {
+            context.startActivity(Intent.createChooser(intent, "请选择浏览器"));
+        }
     }
 }

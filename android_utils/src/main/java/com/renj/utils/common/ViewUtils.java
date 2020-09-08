@@ -68,7 +68,7 @@ public class ViewUtils {
      *
      * @param views 控件，可变参数
      */
-    public static void invilibleView(@NonNull View... views) {
+    public static void invisibleView(@NonNull View... views) {
         for (View view : views) {
             view.setVisibility(View.INVISIBLE);
         }

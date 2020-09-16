@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -31,22 +32,6 @@ import java.util.Properties;
  * ======================================================================
  */
 public class SystemBarUtils {
-    /**
-     * 6.0 以上系统修改状态栏为全透明,4,4以上指定颜色
-     */
-    public static void transparencyBar(Activity activity, int colorResId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            View decorView = activity.getWindow().getDecorView();
-            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            // 使用SystemBarTint库使4.4版本状态栏变色，需要先将状态栏设置为透明
-            transparencyBar(activity);
-            SystemBarTintManager tintManager = new SystemBarTintManager(activity);
-            tintManager.setStatusBarTintEnabled(true);
-            tintManager.setStatusBarTintResource(colorResId);
-        }
-    }
 
     /**
      * 修改状态栏为全透明,4,4以上生效
@@ -90,9 +75,9 @@ public class SystemBarUtils {
     }
 
     /**
-     * 修改状态栏文字颜色，这里小米，魅族区别对待。
+     * 修改状态栏文字颜色，是否黑色文字
      */
-    public static void setLightStatusBar(final Activity activity, final boolean dark) {
+    public static void setStatusBarDark(Activity activity, boolean dark) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             switch (RomUtils.getLightStatusBarAvailableRomType()) {
                 case RomUtils.AvailableRomType.MIUI:
@@ -104,6 +89,24 @@ public class SystemBarUtils {
                 case RomUtils.AvailableRomType.ANDROID_NATIVE:
                     setAndroidNativeLightStatusBar(activity, dark);
                     break;
+            }
+        }
+    }
+
+    /**
+     * 设置状态栏与内容自适应
+     */
+    public static void setFitsSystemWindows(Activity activity, boolean isFitsSystemWindows) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            ViewGroup contentView = activity.findViewById(android.R.id.content);
+            if (contentView == null) {
+                return;
+            }
+            if (contentView.getChildCount() > 0) {
+                View pageView = contentView.getChildAt(0);
+                if (pageView != null) {
+                    pageView.setFitsSystemWindows(isFitsSystemWindows);
+                }
             }
         }
     }

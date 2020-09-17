@@ -1,9 +1,18 @@
 package com.renj.utils.res;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
+import android.renderscript.Allocation;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -198,6 +207,55 @@ public class BitmapUtils {
             e.printStackTrace();
         }
         return size;
+    }
+
+    /**
+     * 高斯模糊图片
+     *
+     * @param context 上下文
+     * @param bitmap  需要模糊的图片
+     * @param radius  模糊半径，值越大，效果越明显
+     * @return
+     */
+    public static Bitmap blurBitmap(Context context, Bitmap bitmap, @IntRange(from = 1, to = 25) int radius) {
+        if (null == bitmap) return null;
+
+        RenderScript rs = RenderScript.create(context);
+        Allocation allocation = Allocation.createFromBitmap(rs, bitmap);
+        ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rs, allocation.getElement());
+        blur.setInput(allocation);
+        blur.setRadius(radius);
+        blur.forEach(allocation);
+
+        Bitmap outBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        allocation.copyTo(outBitmap);
+
+        bitmap.recycle();
+        rs.destroy();
+
+        return outBitmap;
+    }
+
+    /**
+     * 高斯模糊图片
+     *
+     * @param bitmap 需要模糊的图片
+     * @return
+     */
+    public static Bitmap greyBitmap(Bitmap bitmap) {
+        if (null == bitmap) return null;
+
+        ColorMatrix colorMatrix = new ColorMatrix();
+        colorMatrix.setSaturation(0);
+
+        Paint paint = new Paint();
+        paint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+        Bitmap outBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(outBitmap);
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+
+        bitmap.recycle();
+        return outBitmap;
     }
 
     /**

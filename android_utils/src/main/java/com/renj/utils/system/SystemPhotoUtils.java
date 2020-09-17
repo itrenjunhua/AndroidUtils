@@ -15,6 +15,8 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.renj.utils.common.Logger;
+
 import java.io.File;
 
 /**
@@ -451,7 +453,7 @@ public class SystemPhotoUtils {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 }
 
-                String selection = "_id=?";
+                String selection = MediaStore.Images.Media._ID + "=?";
                 String[] selectionArgs = new String[]{split[1]};
 
                 return pathHead + getDataColumn(context, contentUri, selection, selectionArgs);
@@ -459,6 +461,10 @@ public class SystemPhotoUtils {
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            // Return the remote address
+            if (isGooglePhotosUri(uri))
+                return pathHead + uri.getLastPathSegment();
+
             return pathHead + getDataColumn(context, uri, null, null);
         }
         // File
@@ -481,13 +487,11 @@ public class SystemPhotoUtils {
     @Nullable
     private static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
         Cursor cursor = null;
-        String column = "_data";
-        String[] projection = {column};
+        String[] projection = {MediaStore.Images.Media.DATA};
         try {
             cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                int column_index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(column_index);
+            if (cursor != null && cursor.moveToNext()) {
+                return cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
             }
         } finally {
             if (cursor != null)
@@ -518,5 +522,9 @@ public class SystemPhotoUtils {
      */
     private static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    private static boolean isGooglePhotosUri(Uri uri) {
+        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 }

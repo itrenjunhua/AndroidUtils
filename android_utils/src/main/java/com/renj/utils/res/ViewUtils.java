@@ -3,6 +3,7 @@ package com.renj.utils.res;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.text.TextPaint;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -20,7 +21,7 @@ import android.widget.TextView;
  * <p>
  * ======================================================================
  */
-public class ViewContentUtils {
+public class ViewUtils {
     /**
      * 从 {@link EditText} 控件中获取内容
      *
@@ -61,9 +62,24 @@ public class ViewContentUtils {
      * @param textView
      */
     public static void setStrikeThrough(TextView textView) {
-        if (textView == null) {
-            return;
+        if (textView != null) {
+            textView.getPaint().setFlags(Paint.ANTI_ALIAS_FLAG | Paint.STRIKE_THRU_TEXT_FLAG);
         }
-        textView.getPaint().setFlags(Paint.ANTI_ALIAS_FLAG | Paint.STRIKE_THRU_TEXT_FLAG);
+    }
+
+    /**
+     * 给TextView加粗或者不加粗
+     *
+     * @param textView
+     * @param bold     是否加粗  true：加粗；  false：不加粗
+     */
+    public static void setTextBold(TextView textView, boolean bold) {
+        if (textView != null) {
+            TextPaint tp = textView.getPaint();
+            if (bold)
+                tp.setFakeBoldText(true);
+            else
+                tp.setFakeBoldText(false);
+        }
     }
 }

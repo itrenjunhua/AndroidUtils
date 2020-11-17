@@ -1,6 +1,5 @@
 package com.renj.utils.common;
 
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.widget.TextView;
 
@@ -18,7 +17,7 @@ import android.widget.TextView;
  * <p>
  * ======================================================================
  */
-public class ButtonCountDownTimer extends CountDownTimer {
+public class ButtonCountDownTimer extends CustomCountDownTimer {
     private TextView textView;
     private boolean timeOnBefore;
     private String tickMessage;
@@ -64,114 +63,29 @@ public class ButtonCountDownTimer extends CountDownTimer {
     }
 
     public void startTimer() {
+        super.startTimer();
         textView.setEnabled(false);
-        start();
-
-        if (onCountDownListener != null)
-            onCountDownListener.onStart();
-    }
-
-    public void cancelTimer() {
-        cancel();
     }
 
     public void cancelTimer(boolean enable, @NonNull String cancelMessage) {
-        cancel();
+        super.cancelTimer();
         textView.setEnabled(enable);
         textView.setText(cancelMessage);
-
-        if (onCountDownListener != null)
-            onCountDownListener.onCancel();
     }
 
     @Override
     public void onTick(long millisUntilFinished) {
+        super.onTick(millisUntilFinished);
         if (timeOnBefore)
             textView.setText((millisUntilFinished / 1000) + tickMessage);
         else
             textView.setText(tickMessage + (millisUntilFinished / 1000));
-
-        if (onCountDownListener != null)
-            onCountDownListener.onTick(textView, millisUntilFinished);
     }
 
     @Override
     public void onFinish() {
+        super.onFinish();
         textView.setEnabled(true);
         textView.setText(finishMessage);
-
-        if (onCountDownListener != null)
-            onCountDownListener.onFinish();
     }
-
-
-    private OnCountDownListener onCountDownListener;
-
-    public void setOnCountDownListener(OnCountDownListener onCountDownListener) {
-        this.onCountDownListener = onCountDownListener;
-    }
-
-    /**
-     * 各种状态监听
-     */
-    public interface OnCountDownListener {
-        /**
-         * 开始倒计时
-         */
-        void onStart();
-
-        /**
-         * 正在倒计时
-         *
-         * @param textView            控件
-         * @param millisUntilFinished 剩余时间 毫秒
-         */
-        void onTick(TextView textView, long millisUntilFinished);
-
-        /**
-         * 取消倒计时
-         */
-        void onCancel();
-
-        /**
-         * 完成倒计时
-         */
-        void onFinish();
-    }
-
-    public static class SimpleCountDown implements OnCountDownListener {
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void onStart() {
-
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void onTick(TextView textView, long millisUntilFinished) {
-
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void onCancel() {
-
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void onFinish() {
-
-        }
-    }
-
 }

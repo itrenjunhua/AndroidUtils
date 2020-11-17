@@ -1,7 +1,6 @@
 package com.renj.utils.common;
 
 import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
 
 /**
  * ======================================================================
@@ -30,10 +29,7 @@ public class CustomCountDownTimer extends CountDownTimer {
 
     public void cancelTimer() {
         cancel();
-    }
 
-    public void cancelTimer(boolean enable, @NonNull String cancelMessage) {
-        cancel();
         if (onCountDownListener != null)
             onCountDownListener.onCancel();
     }

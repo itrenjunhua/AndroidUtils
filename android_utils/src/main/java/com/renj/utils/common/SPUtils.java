@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
+import com.renj.utils.res.StringUtils;
+
 import java.util.Set;
 
 /**
@@ -21,6 +23,7 @@ import java.util.Set;
  */
 public class SPUtils {
 
+    private static String mCurrentSharedPreferencesName;
     private static SharedPreferences mSharedPreferences;
     private static SharedPreferences.Editor mSharedPreferencesEdit;
 
@@ -47,8 +50,11 @@ public class SPUtils {
 
 
     private SPUtils(String name, int mode) {
-        mSharedPreferences = UIUtils.getContext().getSharedPreferences(name, mode);
-        mSharedPreferencesEdit = mSharedPreferences.edit();
+        if (mSharedPreferences == null || !StringUtils.isEquals(mCurrentSharedPreferencesName, name)) {
+            mSharedPreferences = UIUtils.getContext().getSharedPreferences(name, mode);
+            mSharedPreferencesEdit = mSharedPreferences.edit();
+            mCurrentSharedPreferencesName = name;
+        }
     }
 
 

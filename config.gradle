@@ -1,16 +1,16 @@
 // 统一配置各个 Module 的编译版本、目标版本、依赖库版本等信息
 ext {
     android = [
-            compileSdk   : 27,
+            compileSdk   : 29,
             applicationId: "com.renj.test",
-            minSdk       : 19,
-            targetSdk    : 27,
+            minSdk       : 21,
+            targetSdk    : 28,
             versionCode  : 1,
             versionName  : "1.0.0"
     ]
 
     def dependVersion = [
-            androidSupportV7        : "27.1.1",
+            androidSupportV7        : "28.0.0",
             androidSupportConstraint: "1.0.2",
             jetbrainsAnnotations    : "13.0",
             gson                    : "2.8.5",

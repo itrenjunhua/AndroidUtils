@@ -57,7 +57,7 @@ public class SystemUtils {
      * 打开系统网络设置页面
      */
     public static void openNetWorkActivity() {
-        Intent intent = new Intent("android.settings.WIRELESS_SETTINGS");
+        Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         UIUtils.getContext().startActivity(intent);
     }

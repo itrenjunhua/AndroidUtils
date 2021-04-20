@@ -176,9 +176,8 @@ public class StringUtils {
             int intEnd = intStart + strings[0].length();
             spannableStyleModules.add(SpannableStyleModule.createSizeColorModule(intStart, intEnd, intSize, intColor));
 
-            int floatStart = intEnd;
             int floatEnd = priceStr.length();
-            spannableStyleModules.add(SpannableStyleModule.createSizeColorModule(floatStart, floatEnd, floatSize, floatColor));
+            spannableStyleModules.add(SpannableStyleModule.createSizeColorModule(intEnd, floatEnd, floatSize, floatColor));
         } else {
             int intStart = isHasFlag ? 1 : 0;
             int intEnd = priceStr.length();
@@ -198,9 +197,8 @@ public class StringUtils {
 
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(content);
         for (SpannableStyleModule spannableStyleModule : spannableStyleModules) {
-            if (spannableStyleModule.start < 0) spannableStyleModule.start = 0;
-            if (spannableStyleModule.end > content.length())
-                spannableStyleModule.end = content.length();
+            spannableStyleModule.start = Math.max(spannableStyleModule.start, 0);
+            spannableStyleModule.end = Math.min(spannableStyleModule.end, content.length());
 
             if (spannableStyleModule.start >= spannableStyleModule.end) continue;
 

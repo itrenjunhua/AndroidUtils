@@ -1,11 +1,22 @@
 package com.renj.utils.res;
 
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
+
+import com.renj.utils.collection.ListUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ======================================================================
@@ -29,9 +40,7 @@ public class StringUtils {
      * @return 如果为 "" 、"null"、{@code null} 返回 true，否则 返回 false
      */
     public static boolean isEmpty(String value) {
-        if (null == value || "".equals(value) || "null".equals(value))
-            return true;
-        return false;
+        return null == value || "".equals(value) || "null".equals(value);
     }
 
     /**
@@ -52,9 +61,6 @@ public class StringUtils {
 
     /**
      * 字符串不为空
-     *
-     * @param value
-     * @return
      */
     public static boolean notEmpty(String value) {
         return !isEmpty(value);
@@ -108,6 +114,16 @@ public class StringUtils {
     }
 
     /**
+     * 添加下划线
+     */
+    public static SpannableString underLine(String str) {
+        SpannableString spannableString = new SpannableString(str);
+        UnderlineSpan underlineSpan = new UnderlineSpan();
+        spannableString.setSpan(underlineSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        return spannableString;
+    }
+
+    /**
      * 返回一个高亮spannable
      *
      * @param content 全部文本内容
@@ -120,8 +136,10 @@ public class StringUtils {
         if (TextUtils.isEmpty(content)) {
             return "";
         }
-        start = start >= 0 ? start : 0;
-        end = end <= content.length() ? end : content.length();
+        start = Math.max(start, 0);
+        end = Math.min(end, content.length());
+        if (start >= end) return "";
+
         SpannableString spannable = new SpannableString(content);
         CharacterStyle span = new ForegroundColorSpan(color);
         spannable.setSpan(span, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -129,12 +147,87 @@ public class StringUtils {
     }
 
     /**
+     * 修改金额不同位置的字体大小和颜色
+     *
+     * @param priceStr   价格原始字符串
+     * @param isHasFlag  是否有 ¥ 标记
+     * @param flagSize   ¥ 标记字体大小
+     * @param flagColor  ¥ 标记字体颜色
+     * @param intSize    整数部分字体大小
+     * @param intColor   整数部分字体颜色
+     * @param floatSize  小数部分字体大小
+     * @param floatColor 小数部分字体颜色
+     * @return
+     */
+    public static CharSequence getMoneyStyle(String priceStr, boolean isHasFlag,
+                                             int flagSize, int flagColor,
+                                             int intSize, int intColor,
+                                             int floatSize, int floatColor) {
+        if (isEmpty(priceStr)) return "";
+
+        List<SpannableStyleModule> spannableStyleModules = new ArrayList<>();
+        if (isHasFlag) {
+            spannableStyleModules.add(SpannableStyleModule.createSizeColorModule(0, 1, flagSize, flagColor));
+        }
+
+        if (priceStr.contains(".")) {
+            String[] strings = priceStr.split("\\.");
+            int intStart = isHasFlag ? 1 : 0;
+            int intEnd = intStart + strings[0].length();
+            spannableStyleModules.add(SpannableStyleModule.createSizeColorModule(intStart, intEnd, intSize, intColor));
+
+            int floatStart = intEnd;
+            int floatEnd = priceStr.length();
+            spannableStyleModules.add(SpannableStyleModule.createSizeColorModule(floatStart, floatEnd, floatSize, floatColor));
+        } else {
+            int intStart = isHasFlag ? 1 : 0;
+            int intEnd = priceStr.length();
+            spannableStyleModules.add(SpannableStyleModule.createSizeColorModule(intStart, intEnd, intSize, intColor));
+        }
+        return getStringSpannable(priceStr, spannableStyleModules);
+    }
+
+    /**
+     * 修改文字不同位置的字体大小和颜色
+     *
+     * @return
+     */
+    public static CharSequence getStringSpannable(String content, List<SpannableStyleModule> spannableStyleModules) {
+        if (isEmpty(content)) return "";
+        if (ListUtils.isEmpty(spannableStyleModules)) return content;
+
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(content);
+        for (SpannableStyleModule spannableStyleModule : spannableStyleModules) {
+            if (spannableStyleModule.start < 0) spannableStyleModule.start = 0;
+            if (spannableStyleModule.end > content.length())
+                spannableStyleModule.end = content.length();
+
+            if (spannableStyleModule.start >= spannableStyleModule.end) continue;
+
+            if (spannableStyleModule.colorValue != 0) {
+                ForegroundColorSpan flagColorSpan = new ForegroundColorSpan(spannableStyleModule.colorValue);
+                stringBuilder.setSpan(flagColorSpan, spannableStyleModule.start, spannableStyleModule.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+            if (spannableStyleModule.textSize > 0) {
+                AbsoluteSizeSpan flagSizeSpan = new AbsoluteSizeSpan(spannableStyleModule.textSize, true);
+                stringBuilder.setSpan(flagSizeSpan, spannableStyleModule.start, spannableStyleModule.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+            if (spannableStyleModule.boldText) {
+                StyleSpan styleSpan = new StyleSpan(Typeface.BOLD);
+                stringBuilder.setSpan(styleSpan, spannableStyleModule.start, spannableStyleModule.end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            }
+        }
+        return stringBuilder;
+    }
+
+    /**
      * 格式化手机或电话号码
      *
      * @param number 号码
-     * @param type   0：11位手机号码；1 其他
+     * @param type   0：11位手机号码；1 其他,每四位加一个分割符
      * @param symbol 中间分隔符
-     * @return
      */
     @NonNull
     public static String formatNumber(@NonNull String number, int type, @NonNull String symbol) {
@@ -142,7 +235,7 @@ public class StringUtils {
             //手机号，在最前面加一个空格
             number = " " + number.trim();
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 1; i < number.length(); i++) {
             sb.append(number.charAt(i));
             if (i % 4 == 0) {
@@ -153,6 +246,62 @@ public class StringUtils {
             String str = sb.toString();
             return str.substring(0, str.length() - 1).trim();
         }
-        return sb.toString().trim();// trim掉可能是手机号的空格
+        return sb.toString().trim(); // trim掉可能是手机号的空格
+    }
+
+    /**
+     * 将字符串中的 symbol 内容去除
+     *
+     * @param numberStr 字符串
+     * @param symbol    需要去除的元素
+     */
+    public static String replaceAll(@NonNull String numberStr, @NonNull String symbol) {
+        if (isEmpty(numberStr)) return "";
+
+        return numberStr.replaceAll(symbol, "");
+    }
+
+    public static class SpannableStyleModule {
+        public int start;
+        public int end;
+        public int textSize;
+        public int colorValue;
+        public boolean boldText;
+
+        private SpannableStyleModule(int start, int end, int textSize, int colorValue, boolean boldText) {
+            this.start = start;
+            this.end = end;
+            this.textSize = textSize;
+            this.colorValue = colorValue;
+            this.boldText = boldText;
+        }
+
+        public static SpannableStyleModule createSizeModule(int start, int end, int textSize) {
+            return createSpannableStyleModule(start, end, textSize, 0, false);
+        }
+
+        public static SpannableStyleModule createSizeModule(int start, int end, int textSize, boolean boldText) {
+            return createSpannableStyleModule(start, end, textSize, 0, boldText);
+        }
+
+        public static SpannableStyleModule createColorModule(int start, int end, int colorValue) {
+            return createSpannableStyleModule(start, end, 0, colorValue, false);
+        }
+
+        public static SpannableStyleModule createColorModule(int start, int end, int colorValue, boolean boldText) {
+            return createSpannableStyleModule(start, end, 0, colorValue, boldText);
+        }
+
+        public static SpannableStyleModule createSizeColorModule(int start, int end, int textSize, int colorValue) {
+            return createSpannableStyleModule(start, end, textSize, colorValue, false);
+        }
+
+        public static SpannableStyleModule createSizeColorModule(int start, int end, int textSize, int colorValue, boolean boldText) {
+            return createSpannableStyleModule(start, end, textSize, colorValue, boldText);
+        }
+
+        public static SpannableStyleModule createSpannableStyleModule(int start, int end, int textSize, int colorValue, boolean boldText) {
+            return new SpannableStyleModule(start, end, textSize, colorValue, boldText);
+        }
     }
 }

@@ -1,11 +1,13 @@
 package com.renj.utils.res;
 
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.EditText;
+import android.widget.TextView;
 
 
 /**
@@ -51,6 +53,29 @@ public class ViewUtils {
         }
         lastClickTime = curClickTime;
         return flag;
+    }
+
+    /**
+     * 是否加粗文字
+     */
+    public static void setBoldText(TextView textView, boolean boldText) {
+        textView.getPaint().setFakeBoldText(boldText);
+    }
+
+    /**
+     * 增加删除线
+     */
+    public static void setStrikeThrough(TextView textView) {
+        if (textView == null) return;
+        textView.getPaint().setFlags(Paint.ANTI_ALIAS_FLAG | Paint.STRIKE_THRU_TEXT_FLAG);
+    }
+
+    /**
+     * 获取TextView中的内容
+     */
+    public static String getText(TextView textView) {
+        if (textView == null) return "";
+        return textView.getText().toString().trim();
     }
 
     /**

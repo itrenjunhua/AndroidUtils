@@ -9,24 +9,57 @@ import android.os.CountDownTimer;
  * <p>
  * 创建时间：2020-11-17   15:56
  * <p>
- * 描述：倒计时封装
+ * 描述：倒计时封装</br></br>
+ * <pre>
+ * 创建计时器、设置监听并且启动计时器：
+ *  CustomCountDownTimer customCountDownTimer=
+ *          CustomCountDownTimer.create(60*1000,1000)
+ *          .setOnCountDownListener(new SimpleCountDown(){
+ *          })
+ *          .startTimer();
+ *
+ * 取消计时器：
+ *  customCountDownTimer.cancelTimer();
+ * </pre>
  * <p>
  * 修订历史：
  * <p>
  * ======================================================================
  */
 public class CustomCountDownTimer extends CountDownTimer {
-    public CustomCountDownTimer(long millisInFuture, long countDownInterval) {
+    /**
+     * @param millisInFuture    总时长 单位：毫秒
+     * @param countDownInterval 间隔时长 单位：毫秒
+     */
+    protected CustomCountDownTimer(long millisInFuture, long countDownInterval) {
         super(millisInFuture, countDownInterval);
     }
 
-    public void startTimer() {
+    /**
+     * 创建倒计时封装类 {@link CustomCountDownTimer}
+     *
+     * @param millisInFuture    总时长 单位：毫秒
+     * @param countDownInterval 间隔时长 单位：毫秒
+     */
+    public static CustomCountDownTimer create(long millisInFuture, long countDownInterval) {
+        return new CustomCountDownTimer(millisInFuture, countDownInterval);
+    }
+
+    /**
+     * 开始倒计时
+     */
+    public <T extends CustomCountDownTimer> T startTimer() {
         start();
 
         if (onCountDownListener != null)
             onCountDownListener.onStart();
+
+        return (T) this;
     }
 
+    /**
+     * 取消倒计时
+     */
     public void cancelTimer() {
         cancel();
 
@@ -48,8 +81,14 @@ public class CustomCountDownTimer extends CountDownTimer {
 
     private OnCountDownListener onCountDownListener;
 
-    public void setOnCountDownListener(OnCountDownListener onCountDownListener) {
+    /**
+     * 设置监听
+     *
+     * @param onCountDownListener {@link OnCountDownListener}
+     */
+    public <T extends CustomCountDownTimer> T setOnCountDownListener(OnCountDownListener onCountDownListener) {
         this.onCountDownListener = onCountDownListener;
+        return (T) this;
     }
 
     /**
@@ -79,6 +118,9 @@ public class CustomCountDownTimer extends CountDownTimer {
         void onFinish();
     }
 
+    /**
+     * 监听实现，减少方法重写
+     */
     public static class SimpleCountDown implements OnCountDownListener {
 
         /**
